@@ -27,7 +27,11 @@ Module.register("MMM-Specials", {
 
   async setHelperConfig() {
     await this.handleDate();
-    this.sendSocketNotification("SET_CONFIG", this.config);
+    if (moment(this.config.date).day() === 6 || moment(this.config.date).day() === 7) {
+      this.hide();
+    } else {
+      this.sendSocketNotification("SET_CONFIG", this.config);
+    }
   },
 
   handleDate() {
@@ -53,11 +57,11 @@ Module.register("MMM-Specials", {
     let nextLoad = this.data.config.updateInterval;
     if (typeof delay !== "undefined" && delay >= 0) {
       nextLoad = delay;
-	}
-	// this.hide();
+    }
+    // this.hide();
     nextLoad = nextLoad;
     setTimeout(() => {
-		this.show()
+      this.show();
       this.getData();
     }, nextLoad);
   },
@@ -71,6 +75,7 @@ Module.register("MMM-Specials", {
   getDom() {
     let wrapper = document.createElement("div");
     let table = document.createElement("table");
+    table.className = "half";
     if (this.dataRequest) {
       let showableData = Object.values(this.dataRequest).filter(ent =>
         moment(ent.date)
@@ -142,8 +147,8 @@ Module.register("MMM-Specials", {
         this.getData();
         break;
       case "NETWORK_ERROR":
-		// this.scheduleUpdate(20000);
-		this.hide()
+        // this.scheduleUpdate(20000);
+        this.hide();
         break;
 
       case "DATA_AVAILABLE":
