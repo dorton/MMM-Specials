@@ -27,7 +27,7 @@ Module.register("MMM-Specials", {
 
   async setHelperConfig() {
     await this.handleDate();
-    if (moment(this.config.date).day() === 6 || moment(this.config.date).day() === 0) {
+    if (this.config.date.day() === 6 || this.config.date.day() === 0) {
       this.hide();
     } else {
       this.sendSocketNotification("SET_CONFIG", this.config);
@@ -39,10 +39,8 @@ Module.register("MMM-Specials", {
       if (
         moment()
           .hour(this.config.hide_at_hour)
-          .isBefore(moment(), "hour")
+          .isBefore(moment(), "hour") || moment().day() === 0
       ) {
-        this.config.date = moment().add(1, "day");
-      } if (moment().day() === 0){
         this.config.date = moment().add(1, "day");
       } else {
         this.config.date = moment();
