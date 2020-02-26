@@ -26,12 +26,13 @@ Module.register("MMM-Specials", {
   },
 
   async setHelperConfig() {
-    await this.handleDate();
-    if (this.config.date.day() === 6 || this.config.date.day() === 0) {
-      this.hide();
-    } else {
-      this.sendSocketNotification("SET_CONFIG", this.config);
-    }
+    // await this.handleDate();
+    // if (this.config.date.day() === 6 || this.config.date.day() === 0) {
+    //   console.log('hiding in setHelperConfig');
+    //   this.hide();
+    // } else {
+    // }
+    this.sendSocketNotification("SET_CONFIG", this.config);
   },
 
   handleDate() {
@@ -83,11 +84,12 @@ Module.register("MMM-Specials", {
           .isAfter(moment(), "hour")
       );
       if (!showableData.length || moment().format("dddd") === "Saturday") {
+        console.log('hiding in getDom' );
         this.hide();
       }
       if (showableData.length) {
         let date = Object.entries(showableData[0])[0][1];
-        let kids = Object.entries(showableData[0]).filter(d => d[0] !== "date");
+        let kids = Object.entries(showableData[0]).filter(d => !(d[0] === "date" ||  d[0] === "has_specials"));
         kids.forEach(kid => {
           let row = document.createElement("tr");
           let kidCell = document.createElement("td");
@@ -135,6 +137,12 @@ Module.register("MMM-Specials", {
 
   processData(data) {
     this.dataRequest = data;
+    this.config.date = moment(data[0].date)
+    this.getHeader()
+    if (!data[0].has_specials) {
+      console.log('hiding in processData');
+      this.hide();
+    }
     if (this.loaded === false) {
       this.updateDom();
     }
@@ -148,6 +156,7 @@ Module.register("MMM-Specials", {
         break;
       case "NETWORK_ERROR":
         // this.scheduleUpdate(20000);
+        console.log('hiding in socketNotificationReceived');
         this.hide();
         break;
 

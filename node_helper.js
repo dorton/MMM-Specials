@@ -25,7 +25,7 @@ module.exports = NodeHelper.create({
   },
 
   fetchData: function() {
-    url = `http://localhost:4567/?date=${moment(this.config.date).format("YYYY-MM-DD")}`;
+    url = `http://localhost:4567/`;
 
     request(
       {
